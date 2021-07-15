@@ -1,0 +1,92 @@
+.main {
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  font-family: "Noto Sans KR", sans-serif;
+  user-select: none;
+}
+
+.circle {
+  max-width: 40vw;
+  max-height: 80vh;
+  margin: auto;
+}
+
+.backvideo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  min-height: 100%;
+  z-index: 0;
+}
+
+.profile {
+  position: relative;
+  display: grid;
+  width: 80%;
+  height: 80%;
+  margin: auto;
+}
+
+.content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  padding: 30px;
+  z-index: 1;
+}
+
+.menu {
+  margin: auto;
+  flex: 1;
+  color: #fb5474;
+  font-size: 40px;
+  font-weight: 200;
+  padding-left: 2vw;
+  z-index: 1;
+}
+
+.notoRegular {
+  font-weight: 400;
+}
+
+.notoMedium {
+  font-weight: 500;
+}
+
+.notoLight {
+  font-weight: 200;
+}
+
+.notoThin {
+  font-weight: 100;
+}
+
+.release {
+  font-size: 40px;
+  line-height: 43px;
+  text-align: right;
+  color: #fb5474;
+  flex: 1;
+  p {
+    position: absolute;
+    right: 1vw;
+    p {
+      font-size: 35px;
+      right: 0;
+    }
+  }
+}
+
+.profileImg {
+}
+
+.rightPanel {
+  color: #8a2533;
+  margin: auto 10vw auto -10vw;
+  // width: 30vw;
+  width: 0;
+  opacity: 0;
+  overflow-wrap: unset;
+}
