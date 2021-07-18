@@ -10,7 +10,11 @@
     }
   }
 
-  h1,
+  h1 {
+    color: #ca445d;
+    font-size: 1.7vw;
+  }
+
   h3 {
     margin: 0;
     color: #ca445d;
@@ -19,10 +23,6 @@
       font-size: 0.8vw;
     }
   }
-}
-
-.jp {
-  //   font-size: 0.8vw;
 }
 
 .en {

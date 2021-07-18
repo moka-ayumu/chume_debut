@@ -7,6 +7,8 @@ import { useEffect } from "react";
 function Description() {
   useEffect(() => {}, []);
   const cyperList = {
+    Y5TOAA: "U2FsdGVkX1+z7DEPaQ5A6+M0sWKMa+73gpX6tY5TOAA=",
+    uaSC40: "U2FsdGVkX1+6FORtJnHxZe6w2aFoz+qaVJgl4uaSC40=",
     jCEulA: "U2FsdGVkX19YbwRy9SeT8vkAI38zgoCF0FSjMjCEulA=",
     "3sH04M": "U2FsdGVkX1+AlCfkVqn+S4HIk4YED9T2AWhUT3sH04M=",
     "6I3xTs": "U2FsdGVkX18dySe6yJQ585AoMwNj9go5/lrYg6I3xTs=",
@@ -190,9 +192,14 @@ function Description() {
   return (
     <div>
       <div className={styles.main}>
-        <h1 className="text-3xl">서큐버스 츄우</h1>
+        <h1>
+          <span id="Y5TOAA">♥♥♥</span> 츄우
+        </h1>
         <h3>
-          チューちゃん <span>@succuVitchu</span>
+          チューちゃん{" "}
+          <span>
+            @<span id="uaSC40">♥♥♥</span>_Chu
+          </span>
         </h3>
         <p className={styles.kr}>
           <span id="jCEulA">♥♥♥</span>을 잃어버려&nbsp;

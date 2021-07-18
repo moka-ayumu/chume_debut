@@ -1,41 +1,35 @@
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import Head from "next/head";
-import styles from "../styles/[pid].module.scss";
 import anime from "animejs";
 import Description from "../components/Description";
+import VanillaTilt from "vanilla-tilt";
+import Menu from "../components/Menu";
+import Contact from "../components/Contact";
 
 function Pid() {
   const router = useRouter();
   const { pid } = router.query;
-  const availablePid = [
-    "main",
-    "description",
-    "twitch",
-    "youtube",
-    "twitter",
-    "contact",
-  ];
+  const availablePid = ["main", "description", "debut", "contact"];
+
+  useEffect(() => {}, []);
 
   useEffect(() => {
-    console.log(pid);
     if (availablePid.includes(pid)) {
       //항상 적용되는 부분
-      document
-        .getElementById("circle")
-        .addEventListener("load", circleGradientAnimation);
+      document.getElementById("circle").addEventListener("load", svgLoad);
     }
     switch (pid) {
       case "main":
-        // mainAnimation();
+        // ddayCountAnim();
         clickProccess = false;
+        ddayAnim(true);
         break;
 
       case "description":
-      case "twitch":
-      case "youtube":
-      case "twitter":
       case "contact":
+      case "debut":
+        ddayAnim(false);
         rightAnimation().then(() => {
           clickProccess = false;
         });
@@ -45,6 +39,63 @@ function Pid() {
         break;
     }
   }, [pid]);
+
+  const onMouseMove = (e) => {
+    getMousePosition(e);
+  };
+
+  const getMousePosition = (e, additionalX = 0, additionalY = 0) => {
+    const windowWH = [window.innerWidth, window.innerHeight];
+    const clientWH = [e.clientX + additionalX, e.clientY + additionalY];
+    const center = [windowWH[0] / 2, windowWH[1] / 2];
+    let weight = [
+      Math.round(clientWH[0] - center[0]) / center[0],
+      Math.round(clientWH[1] - center[1]) / center[1],
+    ];
+    mouseInteractive(weight);
+  };
+
+  const mouseInteractive = (wei) => {
+    const windowlow =
+      window.innerWidth <= window.innerHeight
+        ? window.innerWidth
+        : window.innerHeight;
+    moveElement("vtuber_avatar", wei, windowlow * 0.04);
+    moveElement("dday_text", wei, windowlow * 0.04);
+    moveElement("circle", wei, windowlow * 0.025);
+    let impact = windowlow * 0.01;
+    const menu = document.getElementById("menu");
+    menu.style.marginLeft = `${wei[0] * impact}px`;
+    menu.children[0].style.marginTop = `${wei[1] * impact}px`;
+  };
+
+  const moveElement = (eName, wei, impact) => {
+    const e = document.getElementById(eName);
+    e.style.left = `${wei[0] * impact}px`;
+    e.style.top = `${wei[1] * impact}px`;
+  };
+
+  const svgLoad = () => {
+    circleGradientAnimation();
+    onResize();
+    window.addEventListener("resize", onResize);
+    const e = document.getElementById("profile");
+    VanillaTilt.init(e, {
+      max: 5,
+      reverse: true,
+      "full-page-listening": true,
+      speed: 10,
+    });
+    document.addEventListener("mousemove", onMouseMove);
+  };
+
+  const onResize = () => {
+    const circle = document.getElementById("circle");
+    const vtuber = document.getElementById("vtuber");
+    vtuber.style.top = `${circle.offsetTop}px`;
+    vtuber.style.width = `${circle.offsetWidth}px`;
+    vtuber.style.height = `${circle.offsetHeight}px`;
+  };
 
   const circleGradientAnimation = () => {
     const gradientObj = { x1: 10.501, y1: 11.063, x2: 1087.499, y2: 1088.06 };
@@ -72,15 +123,9 @@ function Pid() {
     });
   };
 
-  const mainAnimation = () => {
-    const dday = { dday: 365 };
-    const menuObj = { opacity: 0 };
-    const profileObj = { marginLeft: -480 };
-    const releaseObj = { margin: 40, fontSizeAdd: 20 };
-    const vitchuObj = { opacity: 0 };
-    let e = document.getElementById("dday");
-    let menu = document.getElementById("menu");
-
+  const ddayCountAnim = () => {
+    const dday = { dday: 80 };
+    const e = document.getElementById("dday");
     anime({
       targets: dday,
       dday: 69,
@@ -91,62 +136,32 @@ function Pid() {
         e.textContent = dday["dday"];
       },
     });
-    anime({
-      targets: menuObj,
-      opacity: 1,
-      delay: 2500,
-      duration: 1000,
-      easing: "easeInQuad",
-      update: () => {
-        menu.style.opacity = menuObj["opacity"];
-      },
-    });
-    anime({
-      targets: profileObj,
-      marginLeft: 0,
-      delay: 2000,
-      duration: 1500,
-      easing: "easeInOutQuart",
-      update: () => {
-        document.getElementById(
-          "profile"
-        ).style.marginLeft = `${profileObj["marginLeft"]}px`;
-      },
-    });
-    anime({
-      targets: releaseObj,
-      margin: 0,
-      fontSizeAdd: 0,
-      delay: 2000,
-      duration: 1500,
-      easing: "easeInOutQuart",
-      update: () => {
-        document.getElementById(
-          "release"
-        ).style.margin = `${releaseObj["margin"]}vh`;
-        document.getElementById("release").style.fontSize = `${
-          40 + releaseObj["fontSizeAdd"]
-        }px`;
-        document.getElementById("release").style.lineHeight = `${
-          43 + releaseObj["fontSizeAdd"]
-        }px`;
-        document.getElementById("dday_text").style.fontSize = `${
-          35 + releaseObj["fontSizeAdd"]
-        }px`;
-      },
-    });
-    anime({
-      targets: vitchuObj,
-      opacity: 1,
-      delay: 1500,
-      duration: 1500,
-      easing: "easeInOutQuart",
-      update: () => {
-        document.getElementById(
-          "vitchu"
-        ).style.opacity = `${vitchuObj["opacity"]}`;
-      },
-    });
+  };
+
+  const ddayAnim = (v) => {
+    const e = document.getElementById("dday_text");
+    if (e.style.opacity != 0 || v) {
+      const ddayObj = { opacity: v ? 0 : 1 };
+      if (v) {
+        e.closest("div").style.zIndex = 2;
+      }
+      anime({
+        targets: ddayObj,
+        opacity: v ? 1 : 0,
+        duration: 500,
+        easing: "easeOutQuart",
+        update: () => {
+          e.style.opacity = ddayObj["opacity"];
+        },
+      }).finished.then(() => {
+        if (!v) {
+          e.closest("div").style.zIndex = -1;
+        }
+      });
+    } else if (e.style.opacity == "") {
+      e.closest("div").style.zIndex = -1;
+      e.style.opacity = 0;
+    }
   };
 
   const returnAnimation = async () => {
@@ -217,17 +232,14 @@ function Pid() {
         router.push(e, undefined, { shallow: true });
       } else {
         returnAnimation().then(() => {
-          console.log("return done");
           router.push(e, undefined, { shallow: true });
         });
       }
-    } else {
-      console.log("clickProccess: TRUE");
     }
   };
 
   return availablePid.includes(pid) ? (
-    <div>
+    <div className="overflow-hidden">
       <Head>
         <title>Vtuber CHU</title>
         <meta name="description" content="Vtuber CHU" />
@@ -245,45 +257,68 @@ function Pid() {
         <div className="flex z-10 w-full h-full">
           <div
             id="menu"
-            className="flex-1 m-auto p-10 space-y-3 text-3xl font-thin text-primary"
+            data-tilt
+            className="flex-1 m-auto p-10 space-y-3 text-3xl font-thin text-primary grid"
           >
-            {availablePid.map((v, i) => (
-              <p
-                onClick={() => shallowPush(`./${v}`)}
-                className={`hover:text-hover capitalize duration-150 ease-in-out ${
-                  v == pid ? "font-medium" : ""
-                }`}
-                key={i}
-              >
-                {v}
-              </p>
-            ))}
+            <Menu pid={pid} shallowPush={shallowPush} />
           </div>
-          <div id="profile" className="w-5/12 h-full relative m-auto">
+          <div
+            id="profile"
+            className="w-5/12 h-full relative m-auto"
+            data-tilt
+            style={{ transformStyle: "preserve-3d" }}
+          >
+            <div className="w-full h-full absolute top-0 left-0 z-20" />
             <object
-              data="/profile.svg"
+              data="/circle.svg"
               id="circle"
               className="m-auto w-full absolute top-0 bottom-0 max-h-9/10"
             />
+            <div
+              id="vtuber"
+              className="m-auto absolute filter drop-shadow-2xl-primary"
+              style={{ transform: "translateZ(30px)" }}
+            >
+              <video
+                id="vtuber_avatar"
+                src="./vitchu_disable.webm"
+                className="w-full h-full object-contain m-auto absolute"
+                style={{ transform: "scale(0.9)" }}
+                autoPlay
+                muted
+                loop
+              />
+            </div>
           </div>
           <div id="rightPanel" className="flex-1 p-10 w-0 opacity-0 m-auto">
             {
               {
                 main: <div></div>,
                 description: <Description />,
-                twitch: <p>twitch</p>,
-                youtube: <p>youtube</p>,
-                twitter: <p>twitter</p>,
-                contact: <p>contact</p>,
+                debut: <p className="text-2xl">debut</p>,
+                contact: <Contact />,
               }[pid]
             }
           </div>
-          <div className="absolute right-0 p-5 text-right text-primary">
-            <p id="release" className="font-medium text-4xl">
-              DEBUT
-            </p>
-            <p id="dday_text" className="font-thin text-3xl tracking-wider">
-              D-<span id="dday">69</span>
+          <div className="absolute right-0 p-5 w-48">
+            <img src="./logo.png" />
+          </div>
+          <div
+            className="absolute left-1/2 top-1/2 p-5 text-center text-primary filter drop-shadow-2xxl-whitepink"
+            style={{ transform: "translate(-50%, -50%)" }}
+          >
+            <p
+              id="dday_text"
+              className="font-thin tracking-wider relative"
+              style={{
+                fontFamily: "Shadows Into Light",
+                fontSize: "25vw",
+              }}
+            >
+              D-
+              <span id="dday" style={{ fontFamily: "Shadows Into Light" }}>
+                69
+              </span>
             </p>
           </div>
         </div>

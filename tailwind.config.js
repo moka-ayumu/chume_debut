@@ -15,6 +15,11 @@ module.exports = {
       borderRadius: {
         // large: "5rem",
       },
+      dropShadow: {
+        "2xl-primary": "0 25px 25px rgba(251, 84, 116, 0.5)",
+        "2xxl-white": "0 0px 10px rgba(255, 255, 255, 1)",
+        "2xxl-whitepink": "0 0px 10px rgba(255, 164, 202, 1)",
+      },
     },
   },
   variants: {
