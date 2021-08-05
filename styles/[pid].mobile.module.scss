@@ -1,0 +1,56 @@
+.mobile {
+  position: relative;
+}
+
+.main {
+  @apply select-none w-screen h-screen grid;
+  & > video {
+    @apply fixed min-h-full min-w-full object-cover;
+  }
+  & > div {
+    @apply flex flex-col z-10 w-full h-full;
+  }
+}
+
+.menu {
+  @apply absolute top-4 right-2 text-3xl font-thin text-primary grid;
+}
+
+.profile {
+  @apply w-10/12 h-2/4 relative flex-shrink;
+  transform-style: preserve-3d;
+  margin: 0 auto;
+  margin-top: auto;
+
+  & > object {
+    @apply m-auto w-full absolute top-0 bottom-0 max-h-9/10;
+  }
+}
+
+.profileCover {
+  @apply w-full h-full absolute top-0 left-0 z-20;
+}
+
+.avatar {
+  @apply m-auto absolute filter drop-shadow-2xl-primary;
+  transform: translateZ(30px);
+
+  & > video {
+    @apply w-full h-full object-contain m-auto absolute;
+    transform: scale(0.9);
+  }
+}
+
+.rightPanel {
+  @apply w-11/12 h-full;
+  margin: 0 auto;
+  margin-bottom: auto;
+}
+
+.dday {
+  @apply absolute left-1/2 top-1/2 w-8/12 p-5 text-center text-primary filter drop-shadow-2xxl-whitepink;
+}
+
+.logo {
+  @apply absolute left-0 m-2 w-20;
+}

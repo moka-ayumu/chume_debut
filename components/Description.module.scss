@@ -1,7 +1,14 @@
 .main {
-  font-size: 1vw;
-  overflow: hidden;
-  white-space: nowrap;
+  @media screen and (orientation: landscape) {
+    font-size: 1vw;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  @media screen and (orientation: portrait) {
+    font-size: 4vw;
+    height: 60vh;
+    overflow: scroll;
+  }
 
   p {
     margin-top: 2vh;
@@ -12,7 +19,7 @@
 
   h1 {
     color: #ca445d;
-    font-size: 1.7vw;
+    font-size: 1.7rem;
   }
 
   h3 {
@@ -20,11 +27,13 @@
     color: #ca445d;
     span {
       font-weight: 300;
-      font-size: 0.8vw;
+      font-size: 0.8rem;
     }
   }
 }
 
 .en {
-  font-size: 0.9vw;
+  @media screen and (orientation: landscape) {
+    font-size: 0.9vw;
+  }
 }

@@ -109,6 +109,25 @@ function Description() {
     });
   };
 
+  const oeenSecretVideo = () => {
+    const e_bottom = document.getElementById("vtuber_avatar1");
+    const e = document.getElementById("vtuber_avatar2");
+    e.src = "./vitchu_able.webm";
+    const eObj = { opacity: 0 };
+    e.currentTime = e_bottom.currentTime;
+    anime({
+      targets: eObj,
+      opacity: 1,
+      delay: 500,
+      duration: 1000,
+      easing: "easeOutQuart",
+      update: () => {
+        e.style.opacity = eObj["opacity"];
+        e_bottom.style.opacity = 1 - eObj["opacity"];
+      },
+    });
+  };
+
   const decrypt = () => {
     if (firstQuest) {
       const pass = document.getElementById("pass").value;
@@ -130,6 +149,8 @@ function Description() {
           document.getElementById("decrypt").disabled = true;
           shakeLetterAnimation("decryp", originalText, 2000).then(() => {
             statusAnimation(1);
+            oeenSecretVideo();
+            closeAnimation();
           });
         } else {
           statusAnimation(0);
@@ -193,12 +214,12 @@ function Description() {
     <div>
       <div className={styles.main}>
         <h1>
-          <span id="Y5TOAA">♥♥♥</span> 츄우
+          <span id="Y5TOAA">♥♥♥</span> 츄메
         </h1>
         <h3>
-          チューちゃん{" "}
+          チュメ{" "}
           <span>
-            @<span id="uaSC40">♥♥♥</span>_Chu
+            @<span id="uaSC40">♥♥♥</span>_Chume
           </span>
         </h3>
         <p className={styles.kr}>
@@ -233,7 +254,7 @@ function Description() {
         <input
           type="text"
           id="descriptionPass"
-          className="rounded-full p-2 pl-4 pr-4 focus:outline-none focus:ring-4 focus:ring-pink-200 m-3 text-base"
+          className="rounded-full p-2 pl-4 pr-4 focus:outline-none focus:ring-4 focus:ring-pink-200 m-3 text-base w-8/12"
           onKeyUp={descriptionPassKeyUp}
         />
         <button

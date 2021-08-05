@@ -1,20 +1,38 @@
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Head from "next/head";
 import anime from "animejs";
 import Description from "../components/Description";
 import VanillaTilt from "vanilla-tilt";
 import Menu from "../components/Menu";
 import Contact from "../components/Contact";
+import default_styles from "../styles/[pid].module.scss";
+import mobile_styles from "../styles/[pid].mobile.module.scss";
+import { ViewListIcon } from "@heroicons/react/outline";
 
 function Pid() {
   const router = useRouter();
   const { pid } = router.query;
   const availablePid = ["main", "description", "debut", "contact"];
-
-  useEffect(() => {}, []);
+  const [styles, setStyles] = useState(default_styles);
+  const isMobile = "mobile" in styles;
 
   useEffect(() => {
+    checkMobile();
+  });
+
+  useEffect(() => {
+    defaultChange();
+  }, [styles]);
+
+  useEffect(() => {
+    defaultChange();
+    if (isMobile) {
+      onResize();
+    }
+  }, [pid]);
+
+  const defaultChange = () => {
     if (availablePid.includes(pid)) {
       //항상 적용되는 부분
       document.getElementById("circle").addEventListener("load", svgLoad);
@@ -24,21 +42,29 @@ function Pid() {
         // ddayCountAnim();
         clickProccess = false;
         ddayAnim(true);
+        if (isMobile) {
+          document.getElementById("rightPanel").style.height = 0;
+        }
         break;
 
       case "description":
       case "contact":
       case "debut":
         ddayAnim(false);
-        rightAnimation().then(() => {
+        if (!isMobile) {
+          rightAnimation().then(() => {
+            clickProccess = false;
+          });
+        } else {
           clickProccess = false;
-        });
+          document.getElementById("rightPanel").style.height = "100%";
+        }
         break;
 
       default:
         break;
     }
-  }, [pid]);
+  };
 
   const onMouseMove = (e) => {
     getMousePosition(e);
@@ -56,20 +82,23 @@ function Pid() {
   };
 
   const mouseInteractive = (wei) => {
-    const windowlow =
-      window.innerWidth <= window.innerHeight
-        ? window.innerWidth
-        : window.innerHeight;
-    moveElement("vtuber_avatar", wei, windowlow * 0.04);
-    moveElement("dday_text", wei, windowlow * 0.04);
-    moveElement("circle", wei, windowlow * 0.025);
-    let impact = windowlow * 0.01;
-    const menu = document.getElementById("menu");
-    menu.style.marginLeft = `${wei[0] * impact}px`;
-    menu.children[0].style.marginTop = `${wei[1] * impact}px`;
+    if (!isMobile) {
+      const windowlow =
+        window.innerWidth <= window.innerHeight
+          ? window.innerWidth
+          : window.innerHeight;
+      moveElementByName("vtuber_avatar1", wei, windowlow * 0.04);
+      moveElementByName("vtuber_avatar2", wei, windowlow * 0.04);
+      moveElementByName("dday_text", wei, windowlow * 0.04);
+      moveElementByName("circle", wei, windowlow * 0.025);
+      let impact = windowlow * 0.01;
+      const menu = document.getElementById("menu");
+      menu.style.marginLeft = `${wei[0] * impact}px`;
+      menu.children[0].style.marginTop = `${wei[1] * impact}px`;
+    }
   };
 
-  const moveElement = (eName, wei, impact) => {
+  const moveElementByName = (eName, wei, impact) => {
     const e = document.getElementById(eName);
     e.style.left = `${wei[0] * impact}px`;
     e.style.top = `${wei[1] * impact}px`;
@@ -79,22 +108,48 @@ function Pid() {
     circleGradientAnimation();
     onResize();
     window.addEventListener("resize", onResize);
-    const e = document.getElementById("profile");
-    VanillaTilt.init(e, {
-      max: 5,
-      reverse: true,
-      "full-page-listening": true,
-      speed: 10,
-    });
+    if (!isMobile) {
+      const e = document.getElementById("profile");
+      VanillaTilt.init(e, {
+        max: 5,
+        reverse: true,
+        "full-page-listening": true,
+        speed: 10,
+        reset: false,
+      });
+    }
     document.addEventListener("mousemove", onMouseMove);
   };
 
+  let styles_type = 0;
   const onResize = () => {
+    checkMobile();
     const circle = document.getElementById("circle");
     const vtuber = document.getElementById("vtuber");
     vtuber.style.top = `${circle.offsetTop}px`;
     vtuber.style.width = `${circle.offsetWidth}px`;
+    console.log(circle);
+    console.log(circle.offsetHeight);
     vtuber.style.height = `${circle.offsetHeight}px`;
+  };
+
+  const checkMobile = () => {
+    if (window.innerHeight >= window.innerWidth && styles_type == 0) {
+      if (document.getElementById("profile") != null) {
+        document.getElementById("profile").style.marginLeft = "";
+        document.getElementById("rightPanel").style.width = "";
+      }
+      setStyles(mobile_styles);
+      styles_type = 1;
+    } else if (window.innerHeight < window.innerWidth && styles_type == 1) {
+      if (document.getElementById("profile") != null) {
+        document.getElementById("profile").style.marginLeft = "-25vw";
+        document.getElementById("rightPanel").style.width = "30vw";
+        document.getElementById("rightPanel").style.height = "";
+      }
+      styles_type = 0;
+      setStyles(default_styles);
+    }
   };
 
   const circleGradientAnimation = () => {
@@ -120,6 +175,45 @@ function Pid() {
           gradient.setAttribute(key, value);
         }
       },
+    });
+  };
+
+  const mobileMenuAnim = () => {
+    const e = document.getElementById("mobile_menu");
+    const mobileMenuObj = {
+      maskSize: 0,
+      opacity: 0,
+    };
+    e.style.zIndex = 10;
+    anime({
+      targets: mobileMenuObj,
+      maskSize: 200,
+      opacity: 1,
+      duration: 1000,
+      update: () => {
+        e.style.maskSize = `${mobileMenuObj["maskSize"]}vh`;
+        e.style.opacity = mobileMenuObj["opacity"];
+      },
+    });
+  };
+
+  const mobileMenuCloseAnim = () => {
+    const e = document.getElementById("mobile_menu");
+    const mobileMenuObj = {
+      maskSize: 200,
+      opacity: 1,
+    };
+    anime({
+      targets: mobileMenuObj,
+      maskSize: 0,
+      opacity: 0,
+      duration: 1000,
+      update: () => {
+        e.style.maskSize = `${mobileMenuObj["maskSize"]}vh`;
+        e.style.opacity = mobileMenuObj["opacity"];
+      },
+    }).finished.then(() => {
+      e.style.zIndex = -1;
     });
   };
 
@@ -179,6 +273,8 @@ function Pid() {
         e.style.width = `${rightPanelObj["width"]}vw`;
       },
     });
+    // document.getElementById("profile").style.marginLeft = "";
+    // if (!isMobile) {
     const profileObj = { marginLeft: -25 };
     anime({
       targets: profileObj,
@@ -191,6 +287,7 @@ function Pid() {
         ).style.marginLeft = `${profileObj["marginLeft"]}vw`;
       },
     });
+    // }
     return lastAnime.finished;
   };
 
@@ -199,7 +296,7 @@ function Pid() {
     const lastAnime = anime({
       targets: rightPanelObj,
       opacity: 1,
-      width: 30,
+      width: isMobile ? 90 : 30,
       delay: 100,
       duration: 500,
       easing: "easeOutQuart",
@@ -228,7 +325,7 @@ function Pid() {
   const shallowPush = (e) => {
     if (!clickProccess && `./${pid}` != e) {
       clickProccess = true;
-      if (pid == "main") {
+      if (pid == "main" || isMobile) {
         router.push(e, undefined, { shallow: true });
       } else {
         returnAnimation().then(() => {
@@ -239,58 +336,46 @@ function Pid() {
   };
 
   return availablePid.includes(pid) ? (
-    <div className="overflow-hidden">
+    <div className="fixed">
       <Head>
         <title>Vtuber CHU</title>
         <meta name="description" content="Vtuber CHU" />
         <link rel="icon" href="/favicon.png" />
       </Head>
-      <main className="select-none w-screen h-screen grid">
-        <video
-          autoPlay
-          muted
-          loop
-          className="fixed min-h-full min-w-full object-cover"
-        >
+      <main className={styles.main}>
+        <video autoPlay muted loop>
           <source src="/background.mp4" type="video/mp4"></source>
         </video>
-        <div className="flex z-10 w-full h-full">
-          <div
-            id="menu"
-            data-tilt
-            className="flex-1 m-auto p-10 space-y-3 text-3xl font-thin text-primary grid"
-          >
-            <Menu pid={pid} shallowPush={shallowPush} />
+        <div>
+          <div id="menu" className={styles.menu} data-tilt>
+            {!isMobile ? (
+              <Menu pid={pid} shallowPush={shallowPush} mobile={false} />
+            ) : (
+              <ViewListIcon className="h-10" onClick={mobileMenuAnim} />
+            )}
           </div>
-          <div
-            id="profile"
-            className="w-5/12 h-full relative m-auto"
-            data-tilt
-            style={{ transformStyle: "preserve-3d" }}
-          >
-            <div className="w-full h-full absolute top-0 left-0 z-20" />
-            <object
-              data="/circle.svg"
-              id="circle"
-              className="m-auto w-full absolute top-0 bottom-0 max-h-9/10"
-            />
-            <div
-              id="vtuber"
-              className="m-auto absolute filter drop-shadow-2xl-primary"
-              style={{ transform: "translateZ(30px)" }}
-            >
+          <div id="profile" className={styles.profile} data-tilt>
+            <div className={styles.profileCover} />
+            <object data="/circle.svg" id="circle" />
+            <div id="vtuber" className={styles.avatar}>
               <video
-                id="vtuber_avatar"
+                id="vtuber_avatar1"
                 src="./vitchu_disable.webm"
-                className="w-full h-full object-contain m-auto absolute"
-                style={{ transform: "scale(0.9)" }}
+                autoPlay
+                muted
+                loop
+              />
+              <video
+                id="vtuber_avatar2"
+                src="./vitchu_disable.webm"
+                className="opacity-0"
                 autoPlay
                 muted
                 loop
               />
             </div>
           </div>
-          <div id="rightPanel" className="flex-1 p-10 w-0 opacity-0 m-auto">
+          <div id="rightPanel" className={styles.rightPanel}>
             {
               {
                 main: <div></div>,
@@ -300,11 +385,16 @@ function Pid() {
               }[pid]
             }
           </div>
-          <div className="absolute right-0 p-5 w-48">
-            <img src="./logo.png" />
+          <div className={styles.logo}>
+            <img
+              src="./logo.png"
+              onClick={() => {
+                alert("doyouwantme?");
+              }}
+            />
           </div>
           <div
-            className="absolute left-1/2 top-1/2 p-5 text-center text-primary filter drop-shadow-2xxl-whitepink"
+            className={styles.dday}
             style={{ transform: "translate(-50%, -50%)" }}
           >
             <p
@@ -320,6 +410,34 @@ function Pid() {
                 69
               </span>
             </p>
+          </div>
+        </div>
+        <div
+          className="absolute opacity-0 left-0 top-0 bg-pink-200"
+          id="mobile_menu"
+          style={{
+            zIndex: -1,
+            mask: "url(./youtube.png) 50% 70%",
+            maskSize: "300vh",
+            maskRepeat: "no-repeat",
+          }}
+        >
+          <div
+            className="w-10/12 h-3/4 m-auto relative"
+            onClick={mobileMenuCloseAnim}
+          >
+            <div className="flex flex-col m-auto gap-4 text-primary text-3xl">
+              {availablePid.map((v) => (
+                <p
+                  onClick={() => {
+                    shallowPush(`./${v}`);
+                  }}
+                  className="font-medium"
+                >
+                  {v}
+                </p>
+              ))}
+            </div>
           </div>
         </div>
       </main>
