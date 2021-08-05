@@ -128,8 +128,6 @@ function Pid() {
     const vtuber = document.getElementById("vtuber");
     vtuber.style.top = `${circle.offsetTop}px`;
     vtuber.style.width = `${circle.offsetWidth}px`;
-    console.log(circle);
-    console.log(circle.offsetHeight);
     vtuber.style.height = `${circle.offsetHeight}px`;
   };
 
@@ -427,12 +425,13 @@ function Pid() {
             onClick={mobileMenuCloseAnim}
           >
             <div className="flex flex-col m-auto gap-4 text-primary text-3xl">
-              {availablePid.map((v) => (
+              {availablePid.map((v, i) => (
                 <p
                   onClick={() => {
                     shallowPush(`./${v}`);
                   }}
                   className="font-medium"
+                  key={i}
                 >
                   {v}
                 </p>
