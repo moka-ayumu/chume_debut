@@ -9,6 +9,12 @@ module.exports = {
         danger: "#dd426a",
         hover: "#FF7C76",
       },
+      backgroundColor: {
+        primary: "#fb5474",
+        secondary: "#e2758f",
+        danger: "#dd426a",
+        hover: "#FF7C76",
+      },
       maxHeight: {
         "9/10": "90%",
       },

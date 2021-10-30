@@ -5,11 +5,9 @@ export function shallowPush(e) {
       router.push(e, undefined, { shallow: true });
     } else {
       returnAnimation().then(() => {
-        console.log("return done");
         router.push(e, undefined, { shallow: true });
       });
     }
   } else {
-    console.log("clickProccess: TRUE");
   }
 }

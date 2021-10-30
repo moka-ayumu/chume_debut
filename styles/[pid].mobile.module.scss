@@ -25,6 +25,10 @@
   & > object {
     @apply m-auto w-full absolute top-0 bottom-0 max-h-9/10;
   }
+
+  & * {
+    z-index: -1;
+  }
 }
 
 .profileCover {
@@ -32,7 +36,7 @@
 }
 
 .avatar {
-  @apply m-auto absolute filter drop-shadow-2xl-primary;
+  @apply m-auto absolute filter drop-shadow-2xl-primary pointer-events-none;
   transform: translateZ(30px);
 
   & > video {
@@ -52,5 +56,10 @@
 }
 
 .logo {
-  @apply absolute left-0 m-2 w-20;
+  @apply absolute left-0 m-2 w-24;
+  display: flex;
+  align-items: center;
+  & > img {
+    @apply w-40 pointer-events-none;
+  }
 }

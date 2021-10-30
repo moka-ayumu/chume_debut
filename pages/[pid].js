@@ -6,9 +6,11 @@ import Description from "../components/Description";
 import VanillaTilt from "vanilla-tilt";
 import Menu from "../components/Menu";
 import Contact from "../components/Contact";
+import Bgm from "../components/Bgm";
+import Debut from "../components/Debut";
 import default_styles from "../styles/[pid].module.scss";
 import mobile_styles from "../styles/[pid].mobile.module.scss";
-import { ViewListIcon } from "@heroicons/react/outline";
+import { ViewListIcon, DocumentTextIcon } from "@heroicons/react/outline";
 
 function Pid() {
   const router = useRouter();
@@ -19,23 +21,43 @@ function Pid() {
 
   useEffect(() => {
     checkMobile();
+    if (
+      navigator.userAgent.includes("SamsungBrowser") &&
+      document.getElementById("main_content") != null
+    ) {
+      document.getElementById("main_content").style.height = "88%";
+      document.getElementById("dday_parent").style.transform =
+        "translate(-50%, -70%)";
+    }
   });
 
   useEffect(() => {
-    defaultChange();
+    defaultChange(false);
   }, [styles]);
 
   useEffect(() => {
-    defaultChange();
     if (isMobile) {
+      defaultChange(false);
       onResize();
+    } else {
+      defaultChange(true);
     }
   }, [pid]);
 
-  const defaultChange = () => {
+  const defaultChange = (rightAniBool) => {
     if (availablePid.includes(pid)) {
       //항상 적용되는 부분
       document.getElementById("circle").addEventListener("load", svgLoad);
+      if (pid == "description") {
+        document.getElementById("description_content").style.opacity = 1;
+        document.getElementById("description_content").style.height = "";
+        document.getElementById("description_content").style.position = "";
+      } else {
+        document.getElementById("description_content").style.opacity = 0;
+        document.getElementById("description_content").style.height = 0;
+        document.getElementById("description_content").style.position =
+          "relative";
+      }
     }
     switch (pid) {
       case "main":
@@ -52,9 +74,14 @@ function Pid() {
       case "debut":
         ddayAnim(false);
         if (!isMobile) {
-          rightAnimation().then(() => {
+          if (rightAniBool) {
+            rightAnimation().then(() => {
+              clickProccess = false;
+            });
+          } else {
             clickProccess = false;
-          });
+          }
+          document.getElementById("rightPanel").style.height = "";
         } else {
           clickProccess = false;
           document.getElementById("rightPanel").style.height = "100%";
@@ -82,20 +109,20 @@ function Pid() {
   };
 
   const mouseInteractive = (wei) => {
-    if (!isMobile) {
-      const windowlow =
-        window.innerWidth <= window.innerHeight
-          ? window.innerWidth
-          : window.innerHeight;
-      moveElementByName("vtuber_avatar1", wei, windowlow * 0.04);
-      moveElementByName("vtuber_avatar2", wei, windowlow * 0.04);
-      moveElementByName("dday_text", wei, windowlow * 0.04);
-      moveElementByName("circle", wei, windowlow * 0.025);
-      let impact = windowlow * 0.01;
-      const menu = document.getElementById("menu");
-      menu.style.marginLeft = `${wei[0] * impact}px`;
-      menu.children[0].style.marginTop = `${wei[1] * impact}px`;
-    }
+    // if (!isMobile) {
+    const windowlow =
+      window.innerWidth <= window.innerHeight
+        ? window.innerWidth
+        : window.innerHeight;
+    moveElementByName("vtuber_avatar1", wei, windowlow * 0.04);
+    // moveElementByName("vtuber_avatar2", wei, windowlow * 0.04);
+    moveElementByName("dday_text", wei, windowlow * 0.04);
+    moveElementByName("circle", wei, windowlow * 0.025);
+    let impact = windowlow * 0.01;
+    const menu = document.getElementById("menu");
+    menu.style.marginLeft = `${wei[0] * impact}px`;
+    menu.children[0].style.marginTop = `${wei[1] * impact}px`;
+    // }
   };
 
   const moveElementByName = (eName, wei, impact) => {
@@ -104,7 +131,15 @@ function Pid() {
     e.style.top = `${wei[1] * impact}px`;
   };
 
+  const resetMoveElementByName = (eName) => {
+    const e = document.getElementById(eName);
+    e.style.left = "";
+    e.style.top = "";
+  };
+
+  let svgLoaded = false;
   const svgLoad = () => {
+    svgLoaded = true;
     circleGradientAnimation();
     onResize();
     window.addEventListener("resize", onResize);
@@ -117,8 +152,8 @@ function Pid() {
         speed: 10,
         reset: false,
       });
+      document.addEventListener("mousemove", onMouseMove);
     }
-    document.addEventListener("mousemove", onMouseMove);
   };
 
   let styles_type = 0;
@@ -134,16 +169,40 @@ function Pid() {
   const checkMobile = () => {
     if (window.innerHeight >= window.innerWidth && styles_type == 0) {
       if (document.getElementById("profile") != null) {
+        if (svgLoaded) {
+          document.removeEventListener("mousemove", onMouseMove);
+          resetMoveElementByName("vtuber_avatar1");
+          // resetMoveElementByName("vtuber_avatar2");
+          resetMoveElementByName("dday_text");
+          resetMoveElementByName("circle");
+          const menu = document.getElementById("menu");
+          menu.style.marginLeft = "";
+          menu.children[0].style.marginTop = "";
+          const e = document.getElementById("profile");
+          e.vanillaTilt.destroy();
+        }
         document.getElementById("profile").style.marginLeft = "";
         document.getElementById("rightPanel").style.width = "";
       }
       setStyles(mobile_styles);
       styles_type = 1;
     } else if (window.innerHeight < window.innerWidth && styles_type == 1) {
-      if (document.getElementById("profile") != null) {
+      if (svgLoaded) {
+        document.addEventListener("mousemove", onMouseMove);
+        const e = document.getElementById("profile");
+        VanillaTilt.init(e, {
+          max: 5,
+          reverse: true,
+          "full-page-listening": true,
+          speed: 10,
+          reset: false,
+        });
+      }
+      if (document.getElementById("profile") != null && pid != "main") {
         document.getElementById("profile").style.marginLeft = "-25vw";
         document.getElementById("rightPanel").style.width = "30vw";
         document.getElementById("rightPanel").style.height = "";
+        document.getElementById("rightPanel").style.opacity = "1";
       }
       styles_type = 0;
       setStyles(default_styles);
@@ -179,17 +238,17 @@ function Pid() {
   const mobileMenuAnim = () => {
     const e = document.getElementById("mobile_menu");
     const mobileMenuObj = {
-      maskSize: 0,
+      // maskSize: 0,
       opacity: 0,
     };
-    e.style.zIndex = 10;
+    e.style.zIndex = 100;
     anime({
       targets: mobileMenuObj,
-      maskSize: 200,
+      // maskSize: 200,
       opacity: 1,
       duration: 1000,
       update: () => {
-        e.style.maskSize = `${mobileMenuObj["maskSize"]}vh`;
+        // e.style.maskSize = `${mobileMenuObj["maskSize"]}vh`;
         e.style.opacity = mobileMenuObj["opacity"];
       },
     });
@@ -216,18 +275,31 @@ function Pid() {
   };
 
   const ddayCountAnim = () => {
-    const dday = { dday: 80 };
+    // const dday = { dday: 80 };
     const e = document.getElementById("dday");
-    anime({
-      targets: dday,
-      dday: 69,
-      round: 1,
-      duration: 3000,
-      easing: "easeOutQuart",
-      update: function () {
-        e.textContent = dday["dday"];
-      },
-    });
+    const nd = new Date().getDate();
+    const cot = 30 - nd;
+    if (cot != 0) {
+      e.textContent = cot;
+    } else {
+      e.textContent = "DAY";
+      e.style.fontSize = "21vw";
+    }
+    // anime({
+    //   targets: dday,
+    //   dday: 8 - nd,
+    //   round: 1,
+    //   duration: 3000,
+    //   easing: "easeOutQuart",
+    //   update: function () {
+    //     if (dday["dday"] != 0) {
+    //       e.textContent = dday["dday"];
+    //     } else {
+    //       e.textContent = "DAY";
+    //       e.style.fontSize = "21vw";
+    //     }
+    //   },
+    // });
   };
 
   const ddayAnim = (v) => {
@@ -305,7 +377,7 @@ function Pid() {
       },
     });
     const profileObj = { marginLeft: 0 };
-    anime({
+    const profileAnime = anime({
       targets: profileObj,
       marginLeft: -25,
       duration: 500,
@@ -333,23 +405,30 @@ function Pid() {
     }
   };
 
+  const capitalizeFirst = (str) => {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
+
   return availablePid.includes(pid) ? (
     <div className="fixed">
       <Head>
-        <title>Vtuber CHU</title>
-        <meta name="description" content="Vtuber CHU" />
-        <link rel="icon" href="/favicon.png" />
+        <title>
+          Vtuber CHUME{pid == "main" ? "" : ` | ${capitalizeFirst(pid)}`}
+        </title>
       </Head>
       <main className={styles.main}>
-        <video autoPlay muted loop>
+        <video autoPlay muted loop playsinline>
           <source src="/background.mp4" type="video/mp4"></source>
         </video>
-        <div>
+        <div id="main_content">
           <div id="menu" className={styles.menu} data-tilt>
             {!isMobile ? (
               <Menu pid={pid} shallowPush={shallowPush} mobile={false} />
             ) : (
-              <ViewListIcon className="h-10" onClick={mobileMenuAnim} />
+              <div className="flex gap-1 z-10">
+                <Bgm />
+                <ViewListIcon className="h-10" onClick={mobileMenuAnim} />
+              </div>
             )}
           </div>
           <div id="profile" className={styles.profile} data-tilt>
@@ -358,41 +437,47 @@ function Pid() {
             <div id="vtuber" className={styles.avatar}>
               <video
                 id="vtuber_avatar1"
-                src="./vitchu_disable.webm"
+                src="/sL0z7TSX5os.webm"
                 autoPlay
                 muted
                 loop
+                playsinline
               />
-              <video
+              {/* <video
                 id="vtuber_avatar2"
-                src="./vitchu_disable.webm"
+                src="/sL0z7TSX5os.webm"
                 className="opacity-0"
                 autoPlay
                 muted
                 loop
-              />
+                playsinline
+              /> */}
             </div>
           </div>
           <div id="rightPanel" className={styles.rightPanel}>
+            <Description
+              style={{ opacity: 0, height: 0, position: "relative" }}
+            />
             {
               {
                 main: <div></div>,
-                description: <Description />,
-                debut: <p className="text-2xl">debut</p>,
+                description: <div></div>,
+                debut: <Debut />,
                 contact: <Contact />,
               }[pid]
             }
           </div>
-          <div className={styles.logo}>
-            <img
-              src="./logo.png"
-              onClick={() => {
-                alert("doyouwantme?");
-              }}
-            />
+          <div
+            className={styles.logo}
+            onClick={() => {
+              alert("doyouwantme?");
+            }}
+          >
+            <img src="/logo.png" />
           </div>
           <div
             className={styles.dday}
+            id="dday_parent"
             style={{ transform: "translate(-50%, -50%)" }}
           >
             <p
@@ -403,21 +488,38 @@ function Pid() {
                 fontSize: "25vw",
               }}
             >
-              D-
-              <span id="dday" style={{ fontFamily: "Shadows Into Light" }}>
+              CHUME
+              {/* <span id="dday" style={{ fontFamily: "Shadows Into Light" }}>
                 69
-              </span>
+              </span> */}
             </p>
           </div>
+          {isMobile ? (
+            <div className="hidden" />
+          ) : (
+            <div>
+              <div className="absolute left-7 bottom-7">
+                <DocumentTextIcon
+                  className="h-10 text-primary"
+                  onClick={() => {
+                    window.open("/LICENSE.txt");
+                  }}
+                />
+              </div>
+              <div className="absolute right-7 bottom-7">
+                <Bgm />
+              </div>
+            </div>
+          )}
         </div>
         <div
           className="absolute opacity-0 left-0 top-0 bg-pink-200"
           id="mobile_menu"
           style={{
             zIndex: -1,
-            mask: "url(./youtube.png) 50% 70%",
-            maskSize: "300vh",
-            maskRepeat: "no-repeat",
+            // mask: "url(/youtube.png) 50% 70%",
+            // maskSize: "300vh",
+            // maskRepeat: "no-repeat",
           }}
         >
           <div
@@ -433,10 +535,18 @@ function Pid() {
                   className="font-medium"
                   key={i}
                 >
-                  {v}
+                  {capitalizeFirst(v)}
                 </p>
               ))}
             </div>
+          </div>
+          <div className="absolute left-7 bottom-28">
+            <DocumentTextIcon
+              className="h-10 text-primary"
+              onClick={() => {
+                window.open("/LICENSE.txt");
+              }}
+            />
           </div>
         </div>
       </main>

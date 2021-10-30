@@ -26,7 +26,7 @@
 }
 
 .avatar {
-  @apply m-auto absolute filter drop-shadow-2xl-primary;
+  @apply m-auto absolute filter drop-shadow-2xl-primary pointer-events-none;
   transform: translateZ(30px);
 
   & > video {
@@ -44,5 +44,8 @@
 }
 
 .logo {
-  @apply absolute right-0 p-5 w-48;
+  @apply absolute right-0 p-5 w-44;
+  & > img {
+    @apply pointer-events-none;
+  }
 }

@@ -1,16 +1,7 @@
-import { useEffect } from "react";
 import styles from "./Menu.module.scss";
 
 function Menu({ pid, shallowPush, mobile }) {
-  const availablePid = [
-    "main",
-    "description",
-    "debut",
-    // "twitch",
-    // "youtube",
-    // "twitter",
-    "contact",
-  ];
+  const availablePid = ["main", "description", "debut", "contact"];
   const styleList = {
     main: styles.Main,
     description: styles.Description,
@@ -35,7 +26,6 @@ function Menu({ pid, shallowPush, mobile }) {
   const viewMenu = () => {
     viewMenuType = viewMenuType == 0 ? 1 : 0;
     for (let i = 0; i < availablePid.length; i++) {
-      console.log(`item: ${availablePid[i]} | pid: ${pid}`);
       if (availablePid[i] != pid) {
         const e = document.getElementById(availablePid[i]);
         e.style.opacity = viewMenuType;
@@ -61,7 +51,6 @@ function Menu({ pid, shallowPush, mobile }) {
           <p
             onClick={() => {
               shallowPush(`./${v}`);
-              console.log(`./${v}`);
               mobile ? viewMenu() : "";
             }}
             className={`hover:text-hover capitalize duration-150 ease-in-out ${

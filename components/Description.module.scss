@@ -7,7 +7,7 @@
   @media screen and (orientation: portrait) {
     font-size: 4vw;
     height: 60vh;
-    overflow: scroll;
+    overflow-y: scroll;
   }
 
   p {
@@ -36,4 +36,20 @@
   @media screen and (orientation: landscape) {
     font-size: 0.9vw;
   }
+}
+
+.decryp {
+  @media screen and (orientation: landscape) {
+    @apply absolute flex left-0 right-0 top-0 bottom-0 m-auto w-1/4 h-2/6 bg-red-50 rounded-lg shadow-inner ring-yellow-300;
+  }
+  @media screen and (orientation: portrait) {
+    @apply absolute flex left-0 right-0 top-0 bottom-0 m-auto w-3/4 h-2/6 bg-red-50 rounded-lg shadow-inner ring-yellow-300;
+  }
+}
+
+.secretcard {
+  @apply absolute opacity-0 left-0 top-0;
+  // & * {
+  //   z-index: -1;
+  // }
 }
