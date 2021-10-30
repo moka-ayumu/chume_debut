@@ -1,7 +1,7 @@
 function Contact() {
   const list = [
     {
-      src: "/youtube.png",
+      src: "./youtube.png",
       desc: "YOUTUBE",
       class: "p-3 h-56 object-contain pointer-events-none",
       url: "https://www.youtube.com/channel/UCJqC8ip5UD-dChfH07zy6uw",
@@ -13,7 +13,7 @@ function Contact() {
       url: "https://www.twitch.tv/succuvus_chume",
     },
     {
-      src: "/twitter.png",
+      src: "./twitter.png",
       desc: "TWITTER",
       class: "p-3 h-56 object-contain pointer-events-none",
       url: "https://twitter.com/succuVus_chume",

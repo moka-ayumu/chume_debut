@@ -418,7 +418,7 @@ function Pid() {
       </Head>
       <main className={styles.main}>
         <video autoPlay muted loop playsinline>
-          <source src="/background.mp4" type="video/mp4"></source>
+          <source src="./background.mp4" type="video/mp4"></source>
         </video>
         <div id="main_content">
           <div id="menu" className={styles.menu} data-tilt>
@@ -433,11 +433,11 @@ function Pid() {
           </div>
           <div id="profile" className={styles.profile} data-tilt>
             <div className={styles.profileCover} />
-            <object data="/circle.svg" id="circle" />
+            <object data="./circle.svg" id="circle" />
             <div id="vtuber" className={styles.avatar}>
               <video
                 id="vtuber_avatar1"
-                src="/default.webm"
+                src="./default.webm"
                 autoPlay
                 muted
                 loop
@@ -445,7 +445,7 @@ function Pid() {
               />
               <video
                 id="vtuber_avatar2"
-                src="/default.webm"
+                src="./default.webm"
                 className="opacity-0"
                 autoPlay
                 muted
@@ -473,7 +473,7 @@ function Pid() {
               alert("doyouwantme?");
             }}
           >
-            <img src="/logo.png" />
+            <img src="./logo.png" />
           </div>
           <div
             className={styles.dday}
@@ -502,7 +502,7 @@ function Pid() {
                 <DocumentTextIcon
                   className="h-10 text-primary"
                   onClick={() => {
-                    window.open("/LICENSE.txt");
+                    window.open("./LICENSE.txt");
                   }}
                 />
               </div>
@@ -544,7 +544,7 @@ function Pid() {
             <DocumentTextIcon
               className="h-10 text-primary"
               onClick={() => {
-                window.open("/LICENSE.txt");
+                window.open("./LICENSE.txt");
               }}
             />
           </div>

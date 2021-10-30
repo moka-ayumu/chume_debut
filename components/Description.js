@@ -131,7 +131,7 @@ function Description({ style }) {
   const oeenSecretVideo = () => {
     const e_bottom = document.getElementById("vtuber_avatar1");
     const e = document.getElementById("vtuber_avatar2");
-    e.src = "/sL0z7TSX5os.webm";
+    e.src = "./sL0z7TSX5os.webm";
     const eObj = { opacity: 0 };
     e.currentTime = e_bottom.currentTime;
     anime({
