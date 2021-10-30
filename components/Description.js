@@ -168,7 +168,7 @@ function Description({ style }) {
           document.getElementById("decrypt").disabled = true;
           shakeLetterAnimation("decryp", originalText, 2000).then(() => {
             statusAnimation(1);
-            // oeenSecretVideo();
+            oeenSecretVideo();
             closeAnimation();
           });
         } else {

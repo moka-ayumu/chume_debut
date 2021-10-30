@@ -437,21 +437,21 @@ function Pid() {
             <div id="vtuber" className={styles.avatar}>
               <video
                 id="vtuber_avatar1"
-                src="/sL0z7TSX5os.webm"
+                src="/default.webm"
                 autoPlay
                 muted
                 loop
                 playsinline
               />
-              {/* <video
+              <video
                 id="vtuber_avatar2"
-                src="/sL0z7TSX5os.webm"
+                src="/default.webm"
                 className="opacity-0"
                 autoPlay
                 muted
                 loop
                 playsinline
-              /> */}
+              />
             </div>
           </div>
           <div id="rightPanel" className={styles.rightPanel}>
