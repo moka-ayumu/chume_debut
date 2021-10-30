@@ -393,7 +393,7 @@ function Pid() {
 
   let clickProccess = true;
   const shallowPush = (e) => {
-    if (!clickProccess && `./${pid}` != e) {
+    if (!clickProccess && `/${pid}` != e) {
       clickProccess = true;
       if (pid == "main" || isMobile) {
         router.push(e, undefined, { shallow: true });
@@ -530,7 +530,7 @@ function Pid() {
               {availablePid.map((v, i) => (
                 <p
                   onClick={() => {
-                    shallowPush(`./${v}`);
+                    shallowPush(`/${v}`);
                   }}
                   className="font-medium"
                   key={i}

@@ -50,7 +50,7 @@ function Menu({ pid, shallowPush, mobile }) {
         >
           <p
             onClick={() => {
-              shallowPush(`./${v}`);
+              shallowPush(`/${v}`);
               mobile ? viewMenu() : "";
             }}
             className={`hover:text-hover capitalize duration-150 ease-in-out ${
